@@ -110,3 +110,49 @@ Future<dynamic> backgroundMessageHandler(Map<String, dynamic> message) async {
 
 ### iOS
 Make sure that you have a `NSPhotoLibraryUsageDescription` entry in your `Info.plist`.
+
+#### Important! 
+To make this library work properly use `IntercomAutoIntegratePushNotifications` set to false in your `Info.plist`. (method swizzling turned off)
+
+If you have already implemented notifications in your project, you can skip this section.
+
+If you haven't implemented any kind of push notifications in your project, you'll need to follow this steps:
+1. Add Capability `Push Notifcations` in your mobile application (https://developer.apple.com/documentation/xcode/adding_capabilities_to_your_app?language=objc).
+2. Request notifications permissions. This library allows you to request all (badge, alert, sound) at once by using `Intercom.requestIosNotificationPermissions()`. It will return `Future<bool>` if user allows the requested permissions.
+3. Add this code to your AppDelegate (before `return` statement):
+
+#### Swift
+```swift
+DispatchQueue.main.async {
+  application.registerForRemoteNotifications()
+}
+```
+#### Objective-C
+```objectivec
+dispatch_async(dispatch_get_main_queue(), ^{
+  [application registerForRemoteNotifications];
+});
+```
+
+#### Sending device token to Intercom.
+
+When device token is generated on native side, the plugin will store it. You can pass `onMessage` parameter to the `initialize` method. This method will be called when device token is generated.
+```dart
+Intercom.initialize("APP_ID",
+    iosApiKey: "IOS_TOKEN",
+    androidApiKey: "ANDROID_TOKEN", onMessage: (Map<String, dynamic> data) {
+  print("[Intercom] On message: $data");
+  if (data["method"] == "iosDeviceToken") {
+    String token = data["token"];
+    // You can call this below method here, since we know token is ready
+    // Intercom.registerIosTokenToIntercom(); OR
+    // Intercom.sendTokenToIntercom(token);
+  }
+});
+```
+
+There are two ways to register device token.
+1. You can call `Intercom.sendTokenToIntercom(token)` when you obtain iOS token
+2. You can call `Intercom.registerIosTokenToIntercom()` when you are sure that token is already generated on native side.
+ * You can listen for token in `onMessage` method described above
+ * You can check the token using `Intercom.getIosToken()` at runtime - it will return the previously generated token or `null`
