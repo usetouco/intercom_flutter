@@ -22,7 +22,6 @@ id unread;
 @implementation IntercomFlutterPlugin
 FlutterMethodChannel *_channel;
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-    IntercomFlutterPlugin* instance = [[IntercomFlutterPlugin alloc] init];
     FlutterMethodChannel* channel =
     [FlutterMethodChannel methodChannelWithName:@"maido.io/intercom"
                                 binaryMessenger:[registrar messenger]];
