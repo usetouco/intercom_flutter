@@ -163,8 +163,7 @@ class Intercom {
     return Future.value(_iosDeviceToken);
   }
 
-  static Future<dynamic> sendTokenToIntercom(String token) {
-    print("Start sending token to Intercom");
+  static Future<bool> sendTokenToIntercom(String token) {
     return _channel.invokeMethod('sendTokenToIntercom', {'token': token});
   }
 

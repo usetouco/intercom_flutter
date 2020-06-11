@@ -41,7 +41,7 @@ class IntercomFlutterPlugin(private val application: Application) : MethodCallHa
       call.method == "setUserHash" -> {
         val userHash = call.argument<String>("userHash")
         if(userHash != null) {
-          Intercom.client().setUserHash(userHash);
+          Intercom.client().setUserHash(userHash)
           result.success("User hash added")
         }
       }
@@ -142,7 +142,7 @@ class IntercomFlutterPlugin(private val application: Application) : MethodCallHa
         val name = call.argument<String>("name")
         val metaData = call.argument<Map<String, Any>>("metaData")
         if(name != null) {
-          Intercom.client().logEvent(name, metaData);
+          Intercom.client().logEvent(name, metaData)
           result.success("Logged event")
         }
       }
@@ -153,7 +153,9 @@ class IntercomFlutterPlugin(private val application: Application) : MethodCallHa
         if(token != null) {
           intercomPushClient.sendTokenToIntercom(application, token)
 
-          result.success("Token sent to Intercom")
+          result.success(true)
+        } else {
+          result.success(false)
         }
       }
       call.method == "handlePushMessage" -> {
