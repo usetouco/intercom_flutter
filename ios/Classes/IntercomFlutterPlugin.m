@@ -157,7 +157,9 @@ FlutterMethodChannel *_channel;
             if (token != nil) {
                 NSData * tokenData = [self dataFromHexString:token];
                 [Intercom setDeviceToken:tokenData];
-                result(@"Token sent to Intercom");
+                result(@(YES));
+            } else {
+                result(@(NO));
             }
         }
         else if([@"requestNotificationPermissions" isEqualToString:call.method]) {
